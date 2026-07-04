@@ -28,7 +28,27 @@ Fold6 では Lemur Browser で拡張を使う。
   - `com.jexport.jppost.sync.plist` … 30秒ごと実行のlaunchd定義
   - `install-agent.command` / `uninstall-agent.command`
 
-## 現在のバージョン: 1.11.0
+## 現在のバージョン: 1.12.0
+
+## 公開配信 (v1.12.0〜)
+
+GitHub Releases を「常時公開の配信URL」として使用。Macサーバー起動不要で
+Fold6が出先からも更新可能。
+
+- リポジトリ: https://github.com/jitan213/jp-post-autofill (Public)
+- 最新zip固定URL: https://github.com/jitan213/jp-post-autofill/releases/latest/download/jp-post-autofill.zip
+- 最新版情報:     https://github.com/jitan213/jp-post-autofill/releases/latest/download/version.json
+- popup.js の候補: Tailscale/localhost → GitHub の順で ping。どれか繋がった方から更新。
+
+### 新版リリース手順（gh CLI）
+```
+cd /Users/kamiyamajitan/Downloads/jp-post-autofill-project
+# manifest.json と version.json のバージョンを上げる
+# zip再ビルド
+(cd jp-post-autofill && zip -rq ../jp-post-server/jp-post-autofill.zip . -x "*.DS_Store")
+git add -A && git commit -m "vX.Y.Z: ..." && git push
+gh release create vX.Y.Z jp-post-server/jp-post-autofill.zip jp-post-server/version.json --title "vX.Y.Z" --notes "..."
+```
 
 ## 拡張の機能（実装済み）
 
