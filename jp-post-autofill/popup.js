@@ -323,6 +323,8 @@ $("fill").addEventListener("click", async () => {
 
 const PRESET_LOCAL = "http://localhost:3999";
 const PRESET_TAIL = "http://100.93.41.106:3999";
+// 出先でも使えるように常に試す公開URL（GitHub Releases）
+const PRESET_GITHUB = "https://github.com/jitan213/jp-post-autofill/releases/latest/download";
 
 function cmpVer(a, b) {
   const pa = a.split(".").map(Number), pb = b.split(".").map(Number);
@@ -353,8 +355,10 @@ async function autoDetect() {
   verEl.textContent = "サーバーを探しています...";
 
   const stored = await chrome.storage.local.get(["serverUrl"]);
+  // 家: Tailscale/localhost（Macのjp-post-serverが起動時）
+  // 出先: GitHub Releases（常時公開・認証不要）
   const candidates = [...new Set(
-    [$("serverUrl").value.trim(), stored.serverUrl, PRESET_TAIL, PRESET_LOCAL]
+    [$("serverUrl").value.trim(), stored.serverUrl, PRESET_TAIL, PRESET_LOCAL, PRESET_GITHUB]
       .filter(Boolean).map(u => u.replace(/\/+$/, ""))
   )];
 
@@ -404,6 +408,7 @@ async function initSettings() {
 
 $("presetLocal").addEventListener("click", () => { $("serverUrl").value = PRESET_LOCAL; autoDetect(); });
 $("presetTail").addEventListener("click", () => { $("serverUrl").value = PRESET_TAIL; autoDetect(); });
+$("presetGithub").addEventListener("click", () => { $("serverUrl").value = PRESET_GITHUB; autoDetect(); });
 $("recheck").addEventListener("click", autoDetect);
 $("saveServer").addEventListener("click", async () => {
   await chrome.storage.local.set({ serverUrl: $("serverUrl").value.trim() });
