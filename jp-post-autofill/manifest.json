@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "国際郵便マイページ 住所オートフィル",
+  "version": "1.11.0",
+  "description": "eBayなどからコピーした住所ブロックを貼り付けると、国際郵便マイページのお届け先入力フォームに自動入力します。",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqF6T2oZNtu2dKOzFPMRwAbmkAPbsg0GFFplKEeXSZJhBMzSoIjQk/OXsSiyMealIq0WM45kEscmKVPBGwYy0QhuLjFsqW3nuxfHQxaRLi2eOW3F/FWzC1QJpqWSxxvIXrJL2bn8QtSzX8JzjPhmCKWrhici+B9l4cjoMOBUO04QegSsr7pQiV5bb08IgzjMDnQ9hDSF/rC6DyNAkKa6cjyBhntGbbYQhvvDw38gENXSBeWS4cEgjvTdy19NlLuwijI4pXKP97JM6uOTcc6fza/6aFUDVyfmTAA3FkiYguyWor/GQgQwjfhUbI57Tdh1xhZjr2u+X4H4oda+6D8aRJwIDAQAB",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://www.int-mypage.post.japanpost.jp/*",
+    "https://int-mypage.post.japanpost.jp/*",
+    "http://localhost:3999/*",
+    "http://127.0.0.1:3999/*",
+    "http://100.93.41.106:3999/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "住所オートフィル",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.int-mypage.post.japanpost.jp/*",
+        "https://int-mypage.post.japanpost.jp/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

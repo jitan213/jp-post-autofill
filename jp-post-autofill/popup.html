@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --red: #b71c1c;
+    --ink: #1c1c1c;
+    --line: #d9d4cc;
+    --bg: #faf8f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 420px;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  header {
+    background: var(--red);
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  main { padding: 12px 14px 14px; }
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b6459;
+    margin: 10px 0 3px;
+    letter-spacing: 0.04em;
+  }
+  textarea, input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 7px 8px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+  }
+  textarea:focus, input:focus {
+    outline: 2px solid var(--red);
+    outline-offset: -1px;
+  }
+  #raw { height: 96px; resize: vertical; }
+  #addr { height: 56px; resize: vertical; }
+  .row { display: flex; gap: 8px; }
+  .row > div { flex: 1; }
+  button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px;
+    border: none;
+    border-radius: 4px;
+    background: var(--red);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover { background: #9a1515; }
+  button:disabled { background: #c8c2b8; cursor: default; }
+  button.mini {
+    margin-top: 0;
+    padding: 8px;
+    font-size: 12px;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  button.mini:hover { background: #f0ece5; }
+  #status {
+    margin-top: 8px;
+    font-size: 12px;
+    min-height: 16px;
+    text-align: center;
+  }
+  #status.ok { color: #1b6e2a; }
+  #status.err { color: var(--red); }
+  .hint { font-size: 11px; color: #8a8378; margin-top: 4px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<header>国際郵便マイページ 住所オートフィル</header>
+<main>
+  <label for="raw">住所ブロックを貼り付け（eBayのお届け先をそのままコピー）</label>
+  <textarea id="raw" placeholder="ここにeBayのお届け先を貼り付け"></textarea>
+  <p class="hint">貼り付けると下の欄に自動で振り分けます。間違いがあればここで直してから「フォームに入力」を押してください。</p>
+
+  <label for="name">名前・会社名</label>
+  <input id="name">
+
+  <label for="addr">住所（番地・市区町村）</label>
+  <textarea id="addr"></textarea>
+
+  <div class="row">
+    <div>
+      <label for="state">州名</label>
+      <input id="state">
+    </div>
+    <div>
+      <label for="postal">郵便番号</label>
+      <input id="postal">
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="country">国名（英語）</label>
+      <input id="country">
+    </div>
+    <div>
+      <label for="phone">電話番号</label>
+      <input id="phone">
+    </div>
+  </div>
+
+  <button id="fill">フォームに入力</button>
+  <div id="status"></div>
+
+  <hr style="border:none;border-top:1px solid var(--line);margin:14px 0 4px;">
+
+  <div id="verStatus" class="hint" style="margin-top:4px;text-align:center;"></div>
+  <a id="download" style="display:none;text-align:center;text-decoration:none;">
+    最新版をダウンロード
+  </a>
+  <button class="mini" id="recheck" type="button" style="margin-top:6px;">🔄 更新を再確認</button>
+
+  <details style="margin-top:10px;">
+    <summary style="font-size:11px;color:#8a8378;cursor:pointer;">詳細設定</summary>
+    <label for="serverUrl" style="margin-top:8px;">アップデートサーバーURL</label>
+    <input id="serverUrl" placeholder="http://100.93.41.106:3999">
+    <div class="row" style="margin-top:6px;">
+      <div><button class="mini" id="presetLocal" type="button">localhost (Mac)</button></div>
+      <div><button class="mini" id="presetTail" type="button">Tailscale (Fold6)</button></div>
+    </div>
+    <button class="mini" id="saveServer" type="button" style="margin-top:6px;">設定を保存</button>
+  </details>
+</main>
+<script src="popup.js"></script>
+</body>
+</html>
