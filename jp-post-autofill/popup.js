@@ -328,8 +328,9 @@ $("fill").addEventListener("click", async () => {
 
 const PRESET_LOCAL = "http://localhost:3999";
 const PRESET_TAIL = "http://100.93.41.106:3999";
-// 出先でも使えるように常に試す公開URL（GitHub Releases）
-const PRESET_GITHUB = "https://github.com/jitan213/jp-post-autofill/releases/latest/download";
+// 出先でも使えるように常に試す公開URL（raw.githubusercontent.com は redirect が無いので
+// Lemur含め全ブラウザで安定してDLできる）
+const PRESET_GITHUB = "https://raw.githubusercontent.com/jitan213/jp-post-autofill/main/jp-post-server";
 
 function cmpVer(a, b) {
   const pa = a.split(".").map(Number), pb = b.split(".").map(Number);
