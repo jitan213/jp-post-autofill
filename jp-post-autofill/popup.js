@@ -299,7 +299,12 @@ $("fill").addEventListener("click", async () => {
   }
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab || !/int-mypage\.post\.japanpost\.jp/.test(tab.url || "")) {
+    if (!tab) {
+      setStatus("タブが取得できません。ページをリロードして再実行してください", "err");
+      return;
+    }
+    // tab.url が取れる時だけドメインチェック（Lemur等はURLを返さないことがある）
+    if (tab.url && !/int-mypage\.post\.japanpost\.jp/.test(tab.url)) {
       setStatus("国際郵便マイページのお届け先入力画面を開いてから実行してください", "err");
       return;
     }
