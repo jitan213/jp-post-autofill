@@ -349,15 +349,43 @@ async function ping(url) {
   } catch (e) { return null; }
 }
 
+// ---- DLリンクを常時表示（version検出の結果に応じて色と文言を変える） ----
+function styleDlLink(dlLink, mode, versionText) {
+  dlLink.style.display = "block";
+  dlLink.style.textAlign = "center";
+  dlLink.style.textDecoration = "none";
+  dlLink.style.padding = "11px";
+  dlLink.style.borderRadius = "4px";
+  dlLink.style.fontWeight = "700";
+  dlLink.style.fontSize = "14px";
+  dlLink.style.marginTop = "10px";
+  if (mode === "new") {
+    dlLink.style.background = "#0d47a1";
+    dlLink.style.color = "#fff";
+    dlLink.textContent = `⬇ 最新版 ${versionText} をダウンロード`;
+  } else if (mode === "same") {
+    dlLink.style.background = "#f0ece5";
+    dlLink.style.color = "#1c1c1c";
+    dlLink.textContent = `⬇ 最新版をダウンロード（現在 ${versionText}）`;
+  } else {
+    dlLink.style.background = "#f0ece5";
+    dlLink.style.color = "#1c1c1c";
+    dlLink.textContent = "⬇ 最新版をダウンロード";
+  }
+}
+
 // サーバー自動検出: 保存済みURL → Tailscale → localhost の順に探す
-// ヒットしたら「最新版をダウンロード」リンクの href を直接zipに向ける
+// DL リンクは常時表示。version.json 取得できたら青にして最新版番号を出す。
 async function autoDetect() {
   const verEl = $("verStatus");
   const dlLink = $("download");
-  dlLink.style.display = "none";
-  dlLink.removeAttribute("href");
-  dlLink.removeAttribute("download");
   const current = chrome.runtime.getManifest().version;
+
+  // 起動直後から DL リンクは有効（raw の zip URL に向ける）
+  const rawZipUrl = `${PRESET_GITHUB}/jp-post-autofill.zip?t=${Date.now()}`;
+  dlLink.href = rawZipUrl;
+  dlLink.setAttribute("download", "jp-post-autofill.zip");
+  styleDlLink(dlLink, "unknown");
   verEl.textContent = "サーバーを探しています...";
 
   const stored = await chrome.storage.local.get(["serverUrl"]);
@@ -376,34 +404,27 @@ async function autoDetect() {
     $("serverUrl").value = url;
     await chrome.storage.local.set({ serverUrl: url });
 
+    // DLリンク先はヒットしたサーバーの zip に切り替え
+    const zipUrl = `${url}/${info.zip || "jp-post-autofill.zip"}?t=${Date.now()}`;
+    dlLink.href = zipUrl;
+    dlLink.setAttribute("download", info.zip || "jp-post-autofill.zip");
+
     if (cmpVer(info.version, current) > 0) {
       verEl.innerHTML =
         `<span style="color:#b71c1c;font-weight:700;">新しい版 ${info.version} があります</span><br>` +
-        `<span style="color:#8a8378;">現在 ${current} / サーバー ${url}</span>`;
-      // <a href> でブラウザ側のダウンロード機構を使う（Lemur等でも確実）
-      const zipUrl = `${url}/${info.zip || "jp-post-autofill.zip"}?t=${Date.now()}`;
-      dlLink.href = zipUrl;
-      dlLink.setAttribute("download", info.zip || "jp-post-autofill.zip");
-      dlLink.style.display = "block";
-      dlLink.style.background = "#0d47a1";
-      dlLink.style.color = "#fff";
-      dlLink.style.padding = "11px";
-      dlLink.style.borderRadius = "4px";
-      dlLink.style.fontWeight = "700";
-      dlLink.style.fontSize = "14px";
-      dlLink.style.marginTop = "10px";
-      dlLink.textContent = `⬇ 最新版 ${info.version} をダウンロード`;
+        `<span style="color:#8a8378;">現在 ${current}</span>`;
+      styleDlLink(dlLink, "new", info.version);
     } else {
-      verEl.innerHTML =
-        `<span style="color:#1b6e2a;">✓ 最新版です（${current}）</span>`;
+      verEl.innerHTML = `<span style="color:#1b6e2a;">✓ 最新版です（${current}）</span>`;
+      styleDlLink(dlLink, "same", current);
       try { chrome.action.setBadgeText({ text: "" }); } catch (e) {}
     }
     return;
   }
+  // どのサーバーにも繋がらなかった。DLリンクは raw(GitHub) のまま残す
   verEl.innerHTML =
     `現在のバージョン: ${current}<br>` +
-    `<span style="color:#b71c1c;">サーバー未接続</span>` +
-    `<br><span style="font-size:11px;">Macで jp-post-server を起動してから再確認してください</span>`;
+    `<span style="color:#8a8378;">最新版情報を取得できません（GitHubへの接続が不安定な可能性）</span>`;
 }
 
 async function initSettings() {

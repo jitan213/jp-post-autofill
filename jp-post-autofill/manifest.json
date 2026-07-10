@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "国際郵便マイページ 住所オートフィル",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "eBayなどからコピーした住所ブロックを貼り付けると、国際郵便マイページのお届け先入力フォームに自動入力します。",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqF6T2oZNtu2dKOzFPMRwAbmkAPbsg0GFFplKEeXSZJhBMzSoIjQk/OXsSiyMealIq0WM45kEscmKVPBGwYy0QhuLjFsqW3nuxfHQxaRLi2eOW3F/FWzC1QJpqWSxxvIXrJL2bn8QtSzX8JzjPhmCKWrhici+B9l4cjoMOBUO04QegSsr7pQiV5bb08IgzjMDnQ9hDSF/rC6DyNAkKa6cjyBhntGbbYQhvvDw38gENXSBeWS4cEgjvTdy19NlLuwijI4pXKP97JM6uOTcc6fza/6aFUDVyfmTAA3FkiYguyWor/GQgQwjfhUbI57Tdh1xhZjr2u+X4H4oda+6D8aRJwIDAQAB",
   "permissions": [
